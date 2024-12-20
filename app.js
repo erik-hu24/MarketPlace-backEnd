@@ -19,7 +19,7 @@ async function main() {
 
 var createRouter = require('./routes/productcreate');
 var productsRouter = require('./routes/products');
-var usersRouter = require('./routes/users');
+var authRouter = require('./routes/auth');
 var editRouter = require('./routes/productedit');
 
 var app = express();
@@ -41,7 +41,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/edit', editRouter);
 app.use('/create', createRouter);
 app.use('/', productsRouter);
-app.use('/users', usersRouter);
+app.use('/users', authRouter);
 
 
 
