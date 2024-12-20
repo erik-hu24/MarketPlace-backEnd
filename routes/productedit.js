@@ -59,17 +59,20 @@ router.get('/:productID', async (req, res, next) => {
 });
 
 // Route to handle updating the product
-router.post('/:productID', async (req, res, next) => {
+router.put('/:productID', async (req, res, next) => {
   try {
     const productID = req.params.productID;
     // if any delete action
+    console.log(`this is my delete message: ${req.body.delete}`);
+    console.log(`this is my title message: ${req.body.title}`);
     if (req.body.delete) {
       await products.findByIdAndDelete(productID);
-      //back to the homw page, once the post is deleted
-      return res.render('delete-success'); 
+      //back to the home page, once the post is deleted
+      return res.json({message: 'Product deleted successfully', productID}); 
     }
     const { title, seller, contact, imageURL, description, condition, price, location, status } = req.body;
-    const updatedStatus = status === 'Sold' ? 'Unavailable' : 'Available';
+    const updatedStatus = status === 'Unavailable' ? 'Unavailable' : 'Available';
+    //console.log(`type the name to me: ${seller}`);
 
     // Update the product in the database with new data
     await products.findByIdAndUpdate(productID, {
@@ -85,7 +88,7 @@ router.post('/:productID', async (req, res, next) => {
     });
 
     // Redirect back to the product details page after update
-    res.redirect(`/product/${productID}`);
+    res.json({message: 'Product updated successfully', productID});
   } catch (error) {
     next(error); // Pass any errors to the error-handling middleware
   }

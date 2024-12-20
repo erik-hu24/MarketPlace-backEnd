@@ -14,7 +14,7 @@ function generateRandomPassword(length = 8) {
 
 // display the create page
 router.get('/', function(req, res, next) {
-    res.render('product-create');
+    res.json({message:"create a post of product"});
 });
 
 // user create product
@@ -37,7 +37,7 @@ router.post('/', function(req, res, next){
     })
     // after user submit the new product information successfully
     .then(() =>{
-        res.render('create-success',{
+        res.json({
             productPassword
         });
     })
