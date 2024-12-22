@@ -15,7 +15,8 @@ const productsSchema = new Schema({
     contact: { type: String, required: true },
     imageURL: { type: String, required: true, default: "https://picsum.photos/300"},
     password: {type:String, required:true},
-    status: { type: String, default: "Available" } // Add status field
+    status: { type: String, default: "Available" }, // Add status field
+    username: String
 });
 
 // Compile model from schema

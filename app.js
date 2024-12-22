@@ -22,6 +22,7 @@ var createRouter = require('./routes/productcreate');
 var productsRouter = require('./routes/products');
 var authRouter = require('./routes/auth');
 var editRouter = require('./routes/productedit');
+var emailRouter = require('./routes/email');
 
 var app = express();
 
@@ -39,6 +40,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/email',emailRouter);
 app.use('/edit', editRouter);
 app.use('/create', createRouter);
 app.use('/', productsRouter);
