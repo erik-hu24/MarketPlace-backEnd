@@ -8,7 +8,7 @@ const server = http.createServer(app); // 创建 HTTP 服务器
 const io = new Server(server, {
     path: "/socket.io/", // 默认路径，确保未被覆盖
     cors: {
-      origin: "http://localhost:3001",
+      origin: "http://3.93.45.172",
       methods: ["GET", "POST"],
     },
   });

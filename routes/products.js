@@ -6,8 +6,13 @@ const products = require('../module/products');
 router.get('/', function (req, res, next) {
   const page = parseInt(req.query.page) || 1;
   const limit = 15;
+  const category = req.query.category;
 
-  products.find({})
+  // if any query
+  const query = category ? { category } : {};
+
+  products.find(query)
+    .sort({ createdAt: -1 }) // Sort by `createdAt` in descending order (newest first)
     .then(allProducts => {
       const totalProducts = allProducts.length;
       const totalPages = Math.ceil(totalProducts / limit);
@@ -31,8 +36,17 @@ router.get('/', function (req, res, next) {
 router.get('/available', function (req, res, next) {
   const page = parseInt(req.query.page) || 1;
   const limit = 15;
+  
+  const category = req.query.category;
 
-  products.find({ status: "Available" })
+  // if any query
+  const query = { status: "Available" };
+  if (category) {
+    query.category = category;
+  }
+
+  products.find(query)
+    .sort({ createdAt: -1 }) // Sort by `createdAt` in descending order (newest first)
     .then(allProducts => {
       const totalProducts = allProducts.length;
       const totalPages = Math.ceil(totalProducts / limit);

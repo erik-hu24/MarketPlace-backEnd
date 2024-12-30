@@ -1,6 +1,16 @@
 var express = require('express');
 var router = express.Router();
+const multer = require('multer');
 const products = require('../module/products');
+
+// Multer setup for file uploads (store files in memory)
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fieldNameSize: 300,
+        fileSize: 1048576, // 1 Mb allowed
+      }// 限制文件大小为 10MB
+});
 
 function generateRandomPassword(length = 8) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
@@ -18,21 +28,25 @@ router.get('/', function(req, res, next) {
 });
 
 // user create product
-router.post('/', function(req, res, next){
-    const { title, seller, imageURL, description, price, condition, location, contact, username } = req.body;
+router.post('/', upload.single('imageURL'), function(req, res, next){
+    const { title, seller, description, price, condition, location, category, contact, username } = req.body;
     const productPassword = generateRandomPassword(10);
     
+    // Convert uploaded file to Base64
+    const imageURL = req.file ? req.file.buffer.toString('base64') : null;
+
     // create a new product in Database
     products.create({
         title,
         seller,
-        imageURL,
+        imageURL: imageURL,
         description,
         price,
         condition,
         location,
         contact,
         password: productPassword,
+        category,
         status: 'Available',
         username
     })

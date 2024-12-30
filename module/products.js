@@ -13,10 +13,12 @@ const productsSchema = new Schema({
     condition: { type: String, required: true },
     location: { type: String, required: true },
     contact: { type: String, required: true },
-    imageURL: { type: String, required: true, default: "https://picsum.photos/300"},
+    imageURL: { type: String, required: true},
     password: {type:String, required:true},
+    category:{type:String, required:true},
     status: { type: String, default: "Available" }, // Add status field
-    username: String
+    username: String,
+    createdAt: { type: Date, default: Date.now } // Automatically set to the current timestamp
 });
 
 // Compile model from schema
