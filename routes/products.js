@@ -7,7 +7,21 @@ router.get('/', function (req, res, next) {
   const page = parseInt(req.query.page) || 1;
   const limit = 15;
 
-  products.find({})
+   // 获取查询参数
+   const category = req.query.category; // 筛选分类
+   const searchQuery = req.query.query || ""; // 搜索关键词
+ 
+   // 构建查询条件
+   const query = {};
+   if (category) {
+     query.category = category; // 筛选条件：分类
+   }
+   if (searchQuery) {
+     query.title = { $regex: searchQuery, $options: "i" }; // 搜索条件：标题包含关键词，忽略大小写
+   }
+
+  products.find(query)
+    .sort({ createdAt: -1 })
     .then(allProducts => {
       const totalProducts = allProducts.length;
       const totalPages = Math.ceil(totalProducts / limit);
