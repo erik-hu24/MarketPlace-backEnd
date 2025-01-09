@@ -7,41 +7,66 @@ const nodemailer = require('nodemailer');
 const validator = require('validator');
 
 router.post("/register", async (req, res) => {
-    try {
-      const { username, email, password } = req.body;
+  try {
+    const { username, email, password } = req.body;
 
-      // email form
-      if (!validator.isEmail(email)) {
-        console.log(email)
-        return res.status(400).json({ message: "Invalid email format" });
-      }
-
-      // email exist or not
-      users.findOne({email})
-        .then(async(user)=>{
-          if (user) {
-            return res.status(400).json({ message: "Email already registered" });
-          }
-          // create new user
-          const hashedPassword = await bcrypt.hash(password, 10);
-          const newUser = new users({ 
-            username, 
-            email,
-            password: hashedPassword,
-            verified: true  
-          });
-    
-          await newUser.save();
-          res.status(201).json({ message: "Account created successfully" });
-        })
-        .catch(err => {
-          console.error(err);
-          res.status(500).json({ message: "Server error" });
-        });
-    } catch (e) {
-      console.log(e.message);
-      res.status(500).json({ message: "Server error" });
+    // email form
+    if (!validator.isEmail(email)) {
+      console.log(email)
+      return res.status(400).json({ message: "Invalid email format" });
     }
+
+  // email and username exist or not
+  const existingUser = await users.findOne({
+    $or: [{ email }, { username }]
+  });
+
+  if (existingUser) {
+    if (existingUser.email === email) {
+      return res.status(400).json({ message: "Email already registered" });
+    }
+    if (existingUser.username === username) {
+      return res.status(400).json({ message: "Username already taken" });
+    }
+  }
+
+  //create new user
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const newUser = new users({
+    username,
+    email,
+    password: hashedPassword
+  });
+  await newUser.save();
+  res.status(201).json({ message: "Account created successfully" });
+  //   const existingUser = await users.findOne({
+  //     $or: [{ email }, { username }]
+  //   });
+  //   users.findOne({email})
+  //     .then(async(user)=>{
+  //       if (user) {
+  //         return res.status(400).json({ message: "Email already registered" });
+  //       }
+  //       // create new user
+  //       const hashedPassword = await bcrypt.hash(password, 10);
+  //       const newUser = new users({ 
+  //         username, 
+  //         email,
+  //         password: hashedPassword,
+  //         verified: true  
+  //       });
+  
+  //       await newUser.save();
+  //       res.status(201).json({ message: "Account created successfully" });
+  //     })
+  //     .catch(err => {
+  //       console.error(err);
+  //       res.status(500).json({ message: "Server error" });
+  //     });
+  } catch (e) {
+    console.log(e.message);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 // user login

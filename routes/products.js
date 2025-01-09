@@ -5,7 +5,7 @@ const products = require('../module/products');
 /* GET all products with pagination and search */
 router.get('/', function (req, res, next) {
   const page = parseInt(req.query.page) || 1;
-  const limit = 15;
+  const limit = 18;
 
    // 获取查询参数
    const category = req.query.category; // 筛选分类

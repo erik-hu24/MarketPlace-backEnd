@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const multer = require('multer');
 const products = require('../module/products');
+const users = require('../module/users');
 
 // Multer setup for file uploads (store files in memory)
 const upload = multer({
@@ -22,6 +23,23 @@ function generateRandomPassword(length = 8) {
     return password;
 }
 
+// router to get user information
+router.get("/:username", async (req, res) => {
+    const { username } = req.params;
+    try {
+      // find user in DB
+      const user = await users.findOne({ username });
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+    
+      res.json({ email: user.email, username: user.username });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Server error of getting user information" });
+    }
+  });
+
 // display the create page
 router.get('/', function(req, res, next) {
     res.json({message:"create a post of product"});
@@ -29,7 +47,7 @@ router.get('/', function(req, res, next) {
 
 // user create product
 router.post('/', upload.single('imageURL'), function(req, res, next){
-    const { title, seller, description, price, condition, location, category, contact, username } = req.body;
+    const { title, seller, description, price, condition, location, category, contact, useremail, username } = req.body;
     const productPassword = generateRandomPassword(10);
     
     // Convert uploaded file to Base64
@@ -48,6 +66,7 @@ router.post('/', upload.single('imageURL'), function(req, res, next){
         password: productPassword,
         category,
         status: 'Available',
+        useremail,
         username
     })
     // after user submit the new product information successfully

@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 // purchase request 
 router.post('/send-purchase-email', async (req, res) => {
   const { productTitle, price, seller, buyerName } = req.body;
-
+  
   try {
     await transporter.sendMail({
       from: process.env.EMAIL_USER,

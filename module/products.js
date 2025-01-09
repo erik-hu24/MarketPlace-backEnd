@@ -17,6 +17,7 @@ const productsSchema = new Schema({
     password: {type:String, required:true},
     category:{type:String, required:true},
     status: { type: String, default: "Available" }, // Add status field
+    useremail: String,
     username: String,
     createdAt: { type: Date, default: Date.now } // Automatically set to the current timestamp
 });
