@@ -44,7 +44,7 @@ router.get('/', function (req, res, next) {
 /* GET available products with pagination and search */
 router.get('/available', function (req, res, next) {
   const page = parseInt(req.query.page) || 1;
-  const limit = 15;
+  const limit = 18;
   const category = req.query.category; // 获取类别过滤条件
   const searchQuery = req.query.query || ""; // 获取搜索关键词
 
